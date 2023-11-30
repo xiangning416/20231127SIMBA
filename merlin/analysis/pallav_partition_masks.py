@@ -68,7 +68,7 @@ class PartitionBarcodes(analysistask.AnalysisTask):
     
     def _run_analysis(self):
         print("partition begin")
-        print(os.getcwd())
+        #print(os.getcwd())
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
         filterTask = self.dataSet.load_analysis_task(
             self.parameters['filter_task'])
@@ -80,6 +80,7 @@ class PartitionBarcodes(analysistask.AnalysisTask):
             self.parameters['starting_z'] = 2
         path_to_zarrs = self.parameters['path_to_segmentation_zarrs']
         zarr_name = self.parameters['zarr_name']
+        s_scaling_factor=self.parameters['s_scaling_factor']
 
         codebook = filterTask.get_codebook()
         barcodeCount = codebook.get_barcode_count()
@@ -91,7 +92,6 @@ class PartitionBarcodes(analysistask.AnalysisTask):
         #load the scaling factor 
         microns_per_pixel = self.dataSet.get_microns_per_pixel()
         positions = self.dataSet.get_stage_positions()
-        print(positions)
         minx = min(positions.X)/microns_per_pixel 
         miny = min(positions.Y)/microns_per_pixel 
         
@@ -113,7 +113,7 @@ class PartitionBarcodes(analysistask.AnalysisTask):
 
             print("working on z index ", z_index)
             
-            masks = rescale(zarr.open(os.path.join(path_to_zarrs, zarr_name))[z_index,:,:], [4, 4], order=0) #load in the zarr file of the masks file for the given z 
+            masks = rescale(zarr.open(os.path.join(path_to_zarrs, zarr_name))[z_index,:,:], [s_scaling_factor, s_scaling_factor], order=0) #load in the zarr file of the masks file for the given z 
             #contain pixel wise labelling of which pixel is a cell, which cell it is, and which ones are not , 20231130YL, I changed rescale factor from [2,2] to [4,4] for S2 segmentation.
 
             xmax = masks.shape[1]
