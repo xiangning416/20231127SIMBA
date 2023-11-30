@@ -113,8 +113,8 @@ class PartitionBarcodes(analysistask.AnalysisTask):
 
             print("working on z index ", z_index)
             
-            masks = rescale(zarr.open(os.path.join(path_to_zarrs, zarr_name))[z_index,:,:], [2, 2], order=0) #load in the zarr file of the masks file for the given z 
-            #contain pixel wise labelling of which pixel is a cell, which cell it is, and which ones are not 
+            masks = rescale(zarr.open(os.path.join(path_to_zarrs, zarr_name))[z_index,:,:], [4, 4], order=0) #load in the zarr file of the masks file for the given z 
+            #contain pixel wise labelling of which pixel is a cell, which cell it is, and which ones are not , 20231130YL, I changed rescale factor from [2,2] to [4,4] for S2 segmentation.
 
             xmax = masks.shape[1]
             ymax = masks.shape[0]
